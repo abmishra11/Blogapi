@@ -27,10 +27,10 @@ router.post("/", checkAuth, async (req, res) => {
     });
 
     const result = await newJob.save();
-    res.status(201).json({ newJob: result });
+    res.status(201).json({ success: true, newJob: result });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -41,10 +41,10 @@ router.get("/", checkAuth, async (req, res) => {
     const jobs = await Job.find({ userId: verify.userId }).select(
       "_id title imageUrl description userId"
     );
-    res.status(200).json({ jobList: jobs });
+    res.status(200).json({ success: true, jobList: jobs });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -65,12 +65,12 @@ router.put("/:id", checkAuth, async (req, res) => {
     );
 
     if (!updatedJob) {
-      return res.status(404).json({ msg: "Job not found" });
+      return res.status(404).json({ success: false, msg: "Job not found" });
     }
-    res.status(200).json({ updatedJob });
+    res.status(200).json({ success: true, updatedJob: updatedJob });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -84,12 +84,12 @@ router.delete("/:id", checkAuth, async (req, res) => {
     });
 
     if (result.deletedCount === 0) {
-      return res.status(404).json({ msg: "Job not found" });
+      return res.status(404).json({ success: false, msg: "Job not found" });
     }
-    res.status(200).json({ msg: "Job deleted" });
+    res.status(200).json({ success: true, msg: "Job deleted" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

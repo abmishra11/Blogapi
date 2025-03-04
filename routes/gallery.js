@@ -26,10 +26,10 @@ router.post("/", checkAuth, async (req, res) => {
     });
 
     const result = await newGallery.save();
-    res.status(201).json({ newGallery: result });
+    res.status(201).json({ success: true, newGallery: result });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -40,10 +40,10 @@ router.get("/", checkAuth, async (req, res) => {
     const galleries = await Gallery.find({ userId: verify.userId }).select(
       "_id title imageUrl userId"
     );
-    res.status(200).json({ galleryList: galleries });
+    res.status(200).json({ success: true, galleryList: galleries });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -63,12 +63,14 @@ router.put("/:id", checkAuth, async (req, res) => {
     );
 
     if (!updatedGallery) {
-      return res.status(404).json({ msg: "Gallery Image not found" });
+      return res
+        .status(404)
+        .json({ success: false, msg: "Gallery Image not found" });
     }
-    res.status(200).json({ updatedGallery });
+    res.status(200).json({ success: true, updatedGallery: updatedGallery });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -82,12 +84,14 @@ router.delete("/:id", checkAuth, async (req, res) => {
     });
 
     if (result.deletedCount === 0) {
-      return res.status(404).json({ msg: "Gallery image not found" });
+      return res
+        .status(404)
+        .json({ success: false, msg: "Gallery image not found" });
     }
-    res.status(200).json({ msg: "Gallery Image deleted" });
+    res.status(200).json({ success: true, msg: "Gallery Image deleted" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
